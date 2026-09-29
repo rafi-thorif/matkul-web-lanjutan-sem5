@@ -1,11 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
 
 // Redirect halaman utama ke halaman login
 Route::get('/', function () {
-    return redirect()->route('login'); 
+    return redirect()->route('login');
 });
 
 // Route khusus pengguna yang belum login (Guest)
@@ -24,10 +25,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
 });
